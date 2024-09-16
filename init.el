@@ -1,69 +1,83 @@
+;; パッケージ管理
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
-(load (expand-file-name "~/.roswell/helper.el"))
-(setq inferior-lisp-program "ros -Q run")
-(setq slime-lisp-implementations
-      '((sbcl ("sbcl") :coding-system utf-8-unix)
-        (qlot ("qlot" "exec" "sbcl") :coding-system utf-8-unix)))
-
-(require 'auto-complete)
-(require 'auto-complete-config)
-(global-auto-complete-mode t)
-
+;; 言語設定
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 
-(setq inhibit-startup-message t)
-
+;; 余計なファイル作成を無効にする
 (setq make-backup-files nil)
 (setq auto-save-default nil)
-(setq auto-save-list-file-name nil)
-(setq auto-save-list-file-prefix nil)
 
-(tool-bar-mode 0)
-(menu-bar-mode -1)
-(set-face-attribute 'default nil
-                    :family "Monaco"
-                    :height 120)
-(global-display-line-numbers-mode t)
-(set-display-table-slot standard-display-table 0 ?\ )
-(set-display-table-slot standard-display-table 'wrap ?\ )
+;; インデント設定
 (setq-default indent-tabs-mode nil)
-(setq default-tab-width 2)
-(setq tab-width 2)
+(setq-default tab-width 2)
+(setq-default standard-indent 2)
 
-(require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+;; use-packageのインストールと初期化
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
 
+;; テーマとUIの設定
 (use-package doom-themes
   :ensure t
   :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (setq doom-themes-enable-bold t    ; ボールドを有効
+        doom-themes-enable-italic t) ; イタリックを有効
   (load-theme 'doom-one t)
-
-  ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
-  ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-neotree-config)   ;; neotree用のテーマ
+  (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+  (doom-themes-org-config))      ;; org-mode用のカスタムテーマ
 
+;; モードラインのカスタマイズ
 (use-package doom-modeline
   :ensure t
   :hook (after-init . doom-modeline-mode))
 
+;; 括弧を虹色にする
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; Auto-completeの設定
+(use-package auto-complete
+  :ensure t
+  :config
+  (ac-config-default)
+  (global-auto-complete-mode t))
+
+;; Slimeの設定
+(use-package slime
+  :ensure t
+  :config
+  (setq inferior-lisp-program "ros -Q run")
+  (setq slime-lisp-implementations
+        '((sbcl ("sbcl") :coding-system utf-8-unix)
+          (qlot ("qlot" "exec" "sbcl") :coding-system utf-8-unix)))
+  (add-hook 'slime-mode-hook 'set-up-slime-ac)
+  (add-hook 'slime-repl-mode-hook 'set-up-slime-ac))
+
+;; シェル環境の初期化（macOS）
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns x))
+  :config
+  (exec-path-from-shell-initialize))
+
+;; vtermの設定
 (use-package vterm
-    :ensure t)
+  :ensure t)
+
+;; neotreeの設定
+(use-package neotree
+  :ensure t
+  :bind ("C-x d" . neotree-toggle))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -78,5 +92,3 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-(global-set-key (kbd "C-x d") 'neotree-toggle)
