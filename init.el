@@ -57,9 +57,12 @@
   :config
   (ac-config-default)
   (global-auto-complete-mode t)
+  (setq ac-dwim t)
+  (setq ac-auto-start nil)
   (ac-set-trigger-key "TAB")
   (define-key ac-completing-map (kbd "C-n") 'ac-next)
-  (define-key ac-completing-map (kbd "C-p") 'ac-previous))
+  (define-key ac-completing-map (kbd "C-p") 'ac-previous)
+  (define-key ac-completing-map (kbd "C-<return>") 'ac-complete))
 
 ;; Slimeの設定
 (use-package slime
@@ -70,14 +73,13 @@
         '((roswell ("ros" "-Q" "run") :coding-system utf-8-unix)
           (qlot ("qlot" "exec" "ros" "-Q" "run") :coding-system utf-8-unix)))
   (add-hook 'slime-mode-hook 'set-up-slime-ac)
-  (add-hook 'slime-repl-mode-hook 'set-up-slime-ac))
+  (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+  (eval-after-load "auto-complete"
+    '(add-to-list 'ac-modes 'slime-repl-mode)))
 
 (use-package paredit
   :ensure t
-  :hook ((emacs-lisp-mode lisp-mode lisp-interaction-mode slime-repl-mode) . paredit-mode)
-  :config
-  (add-hook 'slime-repl-mode-hook 'paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
+  :hook ((emacs-lisp-mode lisp-mode) . paredit-mode))
 
 ;; シェル環境の初期化（macOS）
 (use-package exec-path-from-shell
