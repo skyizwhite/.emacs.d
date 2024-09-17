@@ -63,6 +63,13 @@
   (add-hook 'slime-mode-hook 'set-up-slime-ac)
   (add-hook 'slime-repl-mode-hook 'set-up-slime-ac))
 
+(use-package paredit
+  :ensure t
+  :hook ((emacs-lisp-mode lisp-mode lisp-interaction-mode slime-repl-mode) . paredit-mode)
+  :config
+  (add-hook 'slime-repl-mode-hook 'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
+
 ;; シェル環境の初期化（macOS）
 (use-package exec-path-from-shell
   :ensure t
@@ -85,7 +92,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ac-slime auto-complete vterm exec-path-from-shell all-the-icons doom-modeline neotree doom-themes rainbow-delimiters)))
+   '(paredit ac-slime auto-complete vterm exec-path-from-shell all-the-icons doom-modeline neotree doom-themes rainbow-delimiters)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,3 +1,4 @@
 # .emacs.d
 
-デジタル盆栽
+My bonsai
+
