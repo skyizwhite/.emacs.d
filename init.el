@@ -50,7 +50,10 @@
   :ensure t
   :config
   (ac-config-default)
-  (global-auto-complete-mode t))
+  (global-auto-complete-mode t)
+  (ac-set-trigger-key "TAB")
+  (define-key ac-completing-map (kbd "C-n") 'ac-next)
+  (define-key ac-completing-map (kbd "C-p") 'ac-previous))
 
 ;; Slimeの設定
 (use-package slime
