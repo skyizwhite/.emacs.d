@@ -11,6 +11,10 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
+;; 余計な記号を非表示にする
+(set-display-table-slot standard-display-table 0 ?\ )
+(set-display-table-slot standard-display-table 'wrap ?\ )
+
 ;; インデント設定
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -26,14 +30,13 @@
 (use-package doom-themes
   :ensure t
   :config
-  (setq doom-themes-enable-bold t    ; ボールドを有効
-        doom-themes-enable-italic t) ; イタリックを有効
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
   (load-theme 'doom-one t)
   (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)   ;; neotree用のテーマ
+  (doom-themes-neotree-config)
   (setq doom-themes-treemacs-theme "doom-atom")
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config))      ;; org-mode用のカスタムテーマ
+  (doom-themes-org-config))
 
 ;; モードラインのカスタマイズ
 (use-package doom-modeline
@@ -61,8 +64,8 @@
   :config
   (setq inferior-lisp-program "ros -Q run")
   (setq slime-lisp-implementations
-        '((sbcl ("sbcl") :coding-system utf-8-unix)
-          (qlot ("qlot" "exec" "sbcl") :coding-system utf-8-unix)))
+        '((roswell ("ros" "-Q" "run") :coding-system utf-8-unix)
+          (qlot ("qlot" "exec" "ros" "-Q" "run") :coding-system utf-8-unix)))
   (add-hook 'slime-mode-hook 'set-up-slime-ac)
   (add-hook 'slime-repl-mode-hook 'set-up-slime-ac))
 
