@@ -84,7 +84,11 @@
 ;; neotreeの設定
 (use-package neotree
   :ensure t
-  :bind ("C-x d" . neotree-toggle))
+  :bind ("C-x d" . neotree-toggle)
+  :config
+  (setq neo-window-width 30)
+  (add-hook 'neotree-mode-hook
+            (lambda () (display-line-numbers-mode -1))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
