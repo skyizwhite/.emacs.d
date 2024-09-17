@@ -20,6 +20,9 @@
 (setq-default tab-width 2)
 (setq-default standard-indent 2)
 
+;; グローバルのキー設定
+(global-set-key (kbd "M-o") 'other-window)
+
 ;; use-packageのインストールと初期化
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
