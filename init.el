@@ -3,6 +3,11 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+(defun config ()
+  "Open the user's init.el file."
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
 ;; 言語設定
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
@@ -19,6 +24,9 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 (setq-default standard-indent 2)
+
+;; デフォルトディレクトリ
+(setq default-directory "~/Code/")
 
 ;; グローバルのキー設定
 (global-set-key (kbd "M-o") 'other-window)
