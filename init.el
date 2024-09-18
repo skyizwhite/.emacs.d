@@ -29,7 +29,23 @@
 (setq default-directory "~/Code/")
 
 ;; グローバルのキー設定
+(defun vterm-toggle ()
+  (interactive)
+  (if (eq major-mode 'vterm-mode)
+      ;; 既に vterm バッファの場合はバッファを削除（非表示）
+      (delete-window)
+    ;; それ以外の場合は分割して既存の vterm を表示
+    (progn
+      (split-window-below)
+      (other-window 1)
+      ;; 新しいプロセスを起動せず、既存の vterm バッファを表示
+      (let ((vterm-buffer (get-buffer "*vterm*")))
+        (if vterm-buffer
+            (switch-to-buffer vterm-buffer)
+          (vterm))))))
+
 (global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "C-t") 'vterm-toggle)
 
 ;; use-packageのインストールと初期化
 (unless (package-installed-p 'use-package)
@@ -98,7 +114,11 @@
 
 ;; vtermの設定
 (use-package vterm
-  :ensure t)
+  :ensure t
+  :config
+  (define-key vterm-mode-map (kbd "C-t") 'vterm-toggle)
+  (add-hook 'vterm-mode-hook
+            (lambda () (display-line-numbers-mode -1))))
 
 ;; neotreeの設定
 (use-package neotree
